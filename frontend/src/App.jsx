@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, ArrowUpLeft, ChevronLeft, Heart, Instagram, Menu, Search, ShoppingBag, Sparkles, Trash2, UserRound, X } from 'lucide-react';
+import { ArrowLeft, ArrowUpLeft, ChevronLeft, Heart, Instagram, Menu, Search, ShoppingBag, Sparkles, Trash2, UserRound, X, Facebook } from 'lucide-react';
 
 const API = 'http://localhost:5000/api';
 const money = (value) => `${Number(value).toLocaleString('he-IL')} ₪`;
@@ -11,14 +11,14 @@ function Layout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   return <div className="app-shell">
     <header className="site-header">
-      <Link className="brand" to="/" onClick={() => setMenuOpen(false)}><span>J</span><div><strong>JOFRA</strong><small>SHOP</small></div></Link>
+      <Link className="brand" to="/login" onClick={() => setMenuOpen(false)}><span>J</span><div><strong>JOFRA</strong><small>SHOP</small></div></Link>
       <nav className={menuOpen ? 'main-nav open' : 'main-nav'}>
         <Link to="/" onClick={() => setMenuOpen(false)}>الرئيسية</Link><a href="/#collection" onClick={() => setMenuOpen(false)}>المجموعة</a><a href="/#story" onClick={() => setMenuOpen(false)}>قصتنا</a>
       </nav>
-      <div className="header-actions"><Link className="login-link" to="/login"><UserRound size={17}/> تسجيل الدخول</Link><button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="القائمة">{menuOpen ? <X/> : <Menu/>}</button></div>
+      <div className="header-actions"><button className="menu-btn" onClick={() => setMenuOpen(!menuOpen)} aria-label="القائمة">{menuOpen ? <X/> : <Menu/>}</button></div>
     </header>
     <main>{children}</main>
-    <footer className="footer"><div><Link className="brand" to="/"><span>J</span><div><strong>JOFRA</strong><small>SHOP</small></div></Link><p>قطع مختارة، تشبهك.</p></div><div className="footer-links"><a href="/#collection">المجموعة</a><a href="/#story">عن جفرا</a><Link to="/login">تسجيل الدخول</Link></div><div className="social"><Instagram size={18}/><span>@jofra.shop</span></div></footer>
+    <footer className="footer"><div><div className="brand"><span>J</span><div><strong>JOFRA</strong><small>SHOP</small></div></div><p>قطع مختارة، تشبهك.</p></div><div className="footer-links"></div><div className="social"><a href="https://www.facebook.com/share/18dtWYid9i/" target="_blank" rel="noreferrer"><Facebook size={18}/><span>Jofra Shop</span></a><a href="https://www.instagram.com/jofra_shop?igsi=MTFtanpwN3Nncmc3cg==" target="_blank" rel="noreferrer"><Instagram size={18}/><span>@jofra.shop</span></a></div></footer>
   </div>;
 }
 
@@ -30,7 +30,7 @@ function Home() {
     <section className="hero"><div className="hero-copy"><p className="eyebrow"><Sparkles size={15}/> موسم جديد، مزاج جديد</p><h1>حقيبة تحمل<br/><em>أسلوبك.</em></h1><p className="hero-text">نختار لك تفاصيل صغيرة تصنع فرقاً كبيراً. اكتشفي مجموعة جفرا الجديدة.</p><a className="primary-btn" href="#collection">اكتشفي المجموعة <ArrowLeft size={17}/></a></div><div className="hero-visual"><div className="hero-stamp">NEW<br/><b>DROP</b><small>2024 — 25</small></div><img src="https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=1200&q=90" alt="حقيبة جفرا بلون الزيتون"/><div className="hero-note">مصممة<br/>لتعيش معك <ArrowUpLeft size={22}/></div></div><div className="hero-count">01 <span>/</span> 04</div></section>
     <section className="marquee"><span>JOFRA SHOP</span><span>•</span><span>MADE FOR YOUR EVERYDAY</span><span>•</span><span>JOFRA SHOP</span></section>
     <section className="collection section-wrap" id="collection"><div className="section-heading"><div><p className="eyebrow">منتقاة بعناية</p><h2>اختاري <em>المفضلة</em></h2></div><p className="section-intro">قطع عملية بتفاصيل أنيقة، صُممت لترافق يومك.</p></div><div className="filters"><div className="category-list">{categories.map((item) => <button className={category === item.name ? 'active' : ''} key={item.id} onClick={() => setCategory(item.name)}>{item.name}</button>)}</div><label className="search-field"><Search size={17}/><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="ابحثي عن حقيبتك..."/></label></div>{loading ? <div className="empty-state">جاري تحميل المجموعة...</div> : apiError ? <div className="empty-state api-error">تعذر الاتصال بالخادم. شغّلي Backend على المنفذ 5000 ثم أعيدي تحميل الصفحة.</div> : products.length ? <div className="product-grid">{products.map((product, index) => <ProductCard key={product.id} product={product} index={index}/>)}</div> : <div className="empty-state">لا توجد حقائب بهذا البحث.</div>}</section>
-    <section className="story section-wrap" id="story"><div className="story-image"><img src="https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=1000&q=85" alt="تفاصيل حقائب جفرا"/><span>EST. 2024</span></div><div className="story-copy"><p className="eyebrow">حكاية جفرا</p><h2>لأن التفاصيل<br/><em>تقول الكثير.</em></h2><p>في جفرا نؤمن أن الحقيبة ليست مجرد قطعة إضافية. إنها المساحة التي تحمل يومك، واللمسة التي تكمل حضورك. نختار كل موديل بحب، ليمنحك أناقة تشبهك وراحة تعتمدين عليها.</p><Link className="text-link" to="/admin">تعرفي علينا <ChevronLeft size={17}/></Link></div></section>
+    <section className="story section-wrap" id="story"><div className="story-image"><img src="https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=1000&q=85" alt="تفاصيل حقائب جفرا"/><span>EST. 2024</span></div><div className="story-copy"><p className="eyebrow">حكاية جفرا</p><h2>لأن التفاصيل<br/><em>تقول الكثير.</em></h2><p>في جفرا نؤمن أن الحقيبة ليست مجرد قطعة إضافية. إنها المساحة التي تحمل يومك، واللمسة التي تكمل حضورك. نختار كل موديل بحب، ليمنحك أناقة تشبهك وراحة تعتمدين عليها.</p></div></section>
   </>;
 }
 
@@ -43,7 +43,7 @@ function Login() {
   const [register, setRegister] = useState(false);
   const [error, setError] = useState('');
   const submit = (event) => { event.preventDefault(); const data = new FormData(event.currentTarget); if (!register && data.get('email') === 'admin@jofra.com' && data.get('password') === 'admin123') { localStorage.setItem('jofra-admin', 'true'); navigate('/admin'); return; } if (!register) { setError('بيانات الدخول غير صحيحة.'); return; } localStorage.setItem('jofra-user', data.get('email')); navigate('/'); };
-  return <section className="auth-page section-wrap"><div className="auth-panel"><p className="eyebrow"><UserRound size={15}/> مساحة جفرا</p><h1>{register ? 'انضمي إلى جفرا.' : 'مرحباً بعودتك.'}</h1><p className="auth-intro">{register ? 'أنشئي حساباً واحفظي اختياراتك المفضلة.' : 'سجلي الدخول للمتابعة إلى حسابك.'}</p><form className="auth-form" onSubmit={submit}><label>البريد الإلكتروني<input name="email" type="email" required placeholder="name@example.com"/></label><label>كلمة المرور<input name="password" type="password" required placeholder="••••••••"/></label>{error && <p className="form-error">{error}</p>}<button className="primary-btn" type="submit">{register ? 'إنشاء الحساب' : 'تسجيل الدخول'} <ArrowLeft size={17}/></button></form><button className="switch-auth" onClick={() => { setRegister(!register); setError(''); }}>{register ? 'لديك حساب؟ تسجيل الدخول' : 'إنشاء حساب جديد'}</button><button className="guest-btn" onClick={() => navigate('/')}>المتابعة كزائر</button><p className="demo-note">دخول الإدارة: admin@jofra.com / admin123</p></div></section>;
+  return <section className="auth-page section-wrap"><div className="auth-panel"><p className="eyebrow"><UserRound size={15}/> مساحة جفرا</p><h1>مرحباً بعودتك.</h1><p className="auth-intro">سجلي الدخول للمتابعة إلى حسابك.</p><form className="auth-form" onSubmit={submit}><label>البريد الإلكتروني<input name="email" type="email" required placeholder="name@example.com"/></label><label>كلمة المرور<input name="password" type="password" required placeholder="••••••••"/></label>{error && <p className="form-error">{error}</p>}<button className="primary-btn" type="submit">تسجيل الدخول <ArrowLeft size={17}/></button></form></div></section>;
 }
 
 function AdminPanel() {
